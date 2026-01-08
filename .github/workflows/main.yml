@@ -1,4 +1,4 @@
-name: Project A CI/CD
+name: Project A – Slow Traditional Pipeline
 
 on:
   push:
@@ -6,26 +6,57 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  slow-build:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Setup Node (no cache)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'false'
+
+      # 3. Install dependencies (slow, no cache)
+      - name: Install dependencies (NO CACHE)
+        run: |
+          cd project_A/app
+          npm install
+
+      # 4. npm audit (extra time)
+      - name: Run npm audit
+        run: |
+          cd project_A/app
+          npm audit || true
+
+      # 5. Artificial delay (simulate legacy scripts)
+      - name: Legacy wait (simulating old scripts)
+        run: |
+          echo "Waiting like old pipelines..."
+          sleep 60
+
+      # 6. Setup Docker (no cache)
       - name: Setup Docker
         uses: docker/setup-buildx-action@v3
-      - name: Install dependencies
-        run: |
-          cd app
-          npm install
-          npm audit --audit-level=high
 
-      - name: Build Docker Image
+      # 7. Build BIG Docker image (no cache)
+      - name: Build Docker image (NO CACHE)
         run: |
-          docker build -t project-a-big:latest ./app
+          cd project_A/app
+          docker build --no-cache -t project-a-big:latest .
 
-      - name: Deploy to Kubernetes
+      # 8. Artificial delay again
+      - name: Another legacy delay
         run: |
-          kubectl apply -f k8s/deployment.yml
-          kubectl apply -f k8s/service.yml
+          echo "More waiting..."
+          sleep 60
+
+      # 9. Fake deploy step (still time-consuming)
+      - name: Simulate deployment
+        run: |
+          echo "Applying Kubernetes manifests..."
+          sleep 30
