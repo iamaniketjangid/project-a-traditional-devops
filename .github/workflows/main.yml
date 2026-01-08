@@ -1,62 +1,48 @@
-name: Project A – Slow Traditional Pipeline
+name: Project A – Working CI Pipeline
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  slow-build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout
-      - name: Checkout code
+      # 1. Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node (no cache)
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'false'
 
-      # 3. Install dependencies (slow, no cache)
-      - name: Install dependencies (NO CACHE)
+      # 3. Install dependencies
+      - name: Install npm dependencies
         run: |
           cd project_A/app
           npm install
 
-      # 4. npm audit (extra time)
+      # 4. Run npm audit (won’t fail pipeline)
       - name: Run npm audit
         run: |
           cd project_A/app
           npm audit || true
 
-      # 5. Artificial delay (simulate legacy scripts)
-      - name: Legacy wait (simulating old scripts)
-        run: |
-          echo "Waiting like old pipelines..."
-          sleep 60
-
-      # 6. Setup Docker (no cache)
+      # 5. Setup Docker
       - name: Setup Docker
         uses: docker/setup-buildx-action@v3
 
-      # 7. Build BIG Docker image (no cache)
-      - name: Build Docker image (NO CACHE)
+      # 6. Build Docker image
+      - name: Build Docker image
         run: |
           cd project_A/app
-          docker build --no-cache -t project-a-big:latest .
+          docker build -t project-a-big:latest .
 
-      # 8. Artificial delay again
-      - name: Another legacy delay
-        run: |
-          echo "More waiting..."
-          sleep 60
-
-      # 9. Fake deploy step (still time-consuming)
-      - name: Simulate deployment
-        run: |
-          echo "Applying Kubernetes manifests..."
-          sleep 30
+      # 7. Success message
+      - name: Pipeline completed
+        run: echo "✅ Project A working CI pipeline completed successfully"
