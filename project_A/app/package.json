@@ -1,0 +1,16 @@
+{
+  "name": "big-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "lodash": "^4.17.21",
+    "moment": "^2.30.1",
+    "axios": "^1.6.7",
+    "mongoose": "^8.0.3"
+  }
+}
+
