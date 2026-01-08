@@ -1,0 +1,19 @@
+name: Project A CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify repo contents
+        run: |
+          echo "Repo structure:"
+          ls -la
